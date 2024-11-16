@@ -1,15 +1,12 @@
-﻿using System;
-using System.Collections.Generic;
-using System.Linq;
-using System.Text;
-using System.Threading.Tasks;
+﻿using System.Linq;
 using TMPro;
 using UnityEngine;
 
 namespace VisualScoreCounter.Utils
 {
-    internal class BloomFontAssetMaker:PersistentSingleton<BloomFontAssetMaker>
+    internal class BloomFontAssetMaker
     {
+        public static BloomFontAssetMaker instance { get; private set; } = new BloomFontAssetMaker();
         public TMP_FontAsset BloomFontAsset()
         {
             TMP_FontAsset customFontAsset = TMP_FontAsset.CreateFontAsset(Resources.FindObjectsOfTypeAll<TMP_FontAsset>().First(x => x.name.Contains(

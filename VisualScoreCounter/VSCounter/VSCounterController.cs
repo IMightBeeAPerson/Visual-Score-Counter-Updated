@@ -19,7 +19,7 @@ using IPA.Utilities;
 using UnityEngine.UI;
 using BeatSaberMarkupLanguage;
 using Zenject;
-using Tweening;
+using Tweening; //TODO
 using System.Reflection;
 
 namespace VisualScoreCounter.VSCounter
@@ -34,21 +34,19 @@ namespace VisualScoreCounter.VSCounter
         [Inject] private CoreGameHUDController coreGameHUD;
         [Inject] private readonly RelativeScoreAndImmediateRankCounter relativeScoreAndImmediateRank;
         [Inject] ScoreController scoreController;
-        [Inject] TimeTweeningManager uwuTweenyManager;
-        [Inject] private GameplayCoreSceneSetupData setupData;
+        //[Inject] TimeTweeningManager uwuTweenyManager; //TODO
+        [Inject] private GameplayCoreSceneSetupData setupData; //TODO
         [Inject] private NoteCountProcessor noteCountProcessor;
 
         // Ring vars
         private readonly string multiplierImageSpriteName = "Circle";
         private readonly Vector3 ringSize = Vector3.one * 1.175f;
-        private float _currentPercentage = 0.0f;
         private bool bIsInReplay = false;
 
         private TMP_Text percentMajorText;
         private TMP_Text percentMinorText;
 
-        private ImageView progressRing;
-        private VSCounterTweenHelper vsCounterTweenHelper;
+        private Image progressRing; //TODO
 
         private int notesLeft = 0;
 
@@ -135,14 +133,13 @@ namespace VisualScoreCounter.VSCounter
         {
 
 
-            _currentPercentage = 100.0f;
             percentMajorText = canvasUtility.CreateTextFromSettings(settings);
             percentMajorText.fontSize = config.CounterFontSettings.WholeNumberFontSize;
             percentMinorText = canvasUtility.CreateTextFromSettings(settings);
             percentMinorText.fontSize = config.CounterFontSettings.FractionalNumberFontSize;
             if (config.CounterFontSettings.BloomFont)
             {
-                percentMajorText.font = BloomFontAssetMaker.instance.BloomFontAsset();
+                percentMajorText.font = BloomFontAssetMaker.instance.BloomFontAsset(); //TODO
                 percentMinorText.font = BloomFontAssetMaker.instance.BloomFontAsset();
             }
 
@@ -154,7 +151,7 @@ namespace VisualScoreCounter.VSCounter
                 Vector2 ringAnchoredPos = (canvasUtility.GetAnchoredPositionFromConfig(settings) * currentSettings.PositionScale);
                 ringAnchoredPos = ringAnchoredPos + GetCounterOffset();
 
-                ImageView backgroundImage = CreateRing(canvas);
+                Image backgroundImage = CreateRing(canvas);
                 backgroundImage.rectTransform.anchoredPosition = ringAnchoredPos;
                 backgroundImage.CrossFadeAlpha(0.05f, 1f, false);
                 backgroundImage.transform.localScale = ComputeRingSize();
@@ -167,7 +164,6 @@ namespace VisualScoreCounter.VSCounter
                 {
                     progressRing.material = new Material(Shader.Find("UI/Default"));
                 }
-                vsCounterTweenHelper = progressRing.gameObject.AddComponent<VSCounterTweenHelper>();
             }
 
             if (config.HideBaseGameRankDisplay)
@@ -222,13 +218,13 @@ namespace VisualScoreCounter.VSCounter
         }
 
 
-        private ImageView CreateRing(Canvas canvas)
+        private Image CreateRing(Canvas canvas)
         {
             // Unfortunately, there is no guarantee that I have the CoreGameHUDController, since No Text and Huds
             // completely disables it from spawning. So, to be safe, we recreate this all from scratch.
             GameObject imageGameObject = new GameObject("Ring Image", typeof(RectTransform));
             imageGameObject.transform.SetParent(canvas.transform, false);
-            ImageView newImage = imageGameObject.AddComponent<ImageView>();
+            Image newImage = imageGameObject.AddComponent<Image>();
             newImage.enabled = false;
             newImage.material = Utilities.ImageResources.NoGlowMat;
             newImage.sprite = Resources.FindObjectsOfTypeAll<Sprite>().FirstOrDefault(x => x.name == multiplierImageSpriteName);

@@ -1,6 +1,8 @@
 ﻿using HarmonyLib;
+using System.Collections.Generic;
 using System.Reflection;
 using UnityEngine;
+using UnityEngine.XR;
 
 namespace VisualScoreCounter.Utils
 {
@@ -63,9 +65,7 @@ namespace VisualScoreCounter.Utils
 
 						spectateParent = y == null ? null : y.transform.parent;
 					}
-
-					if (!UnityEngine.XR.XRDevice.isPresent)
-						x.enabled = false;
+					x.enabled = IsPresent();
 
 					// Doing this so other plugins that rely on Camera.main dont die
 					x.tag = "MainCamera";
@@ -75,5 +75,18 @@ namespace VisualScoreCounter.Utils
 			Plugin.Log.Info($"UpdateIsInReplay() -> isInReplay: {isInReplay}, replayCamera: {replayCamera}");
 #endif
 		}
-	}
+        public static bool IsPresent()
+        {
+            var xrDisplaySubsystems = new List<XRDisplaySubsystem>();
+            SubsystemManager.GetInstances<XRDisplaySubsystem>(xrDisplaySubsystems);
+            foreach (var xrDisplay in xrDisplaySubsystems)
+            {
+                if (xrDisplay.running)
+                {
+                    return true;
+                }
+            }
+            return false;
+        }
+    }
 }
